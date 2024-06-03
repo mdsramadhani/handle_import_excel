@@ -35,7 +35,7 @@
         { headerName: "no", field: "no" },
         { headerName: "customer", field: "customer" },
         { headerName: "project", field: "project" },
-        { headerName: "tgl_kirim", field: "tgl_kirim" },
+        { headerName: "tgl_kirim (unix time)", field: "tgl_kirim" },
         { headerName: "truk", field: "truk" },
         { headerName: "driver", field: "driver" },
         { headerName: "no_hp", field: "no_hp" },
@@ -59,6 +59,16 @@
         var workbook = XLSX.read(data, { type: 'array' });
         var worksheet = workbook.Sheets[workbook.SheetNames[0]];
         jsonData = XLSX.utils.sheet_to_json(worksheet);
+        jsonData.forEach(function (row) {
+          if (row.tgl_kirim) {
+              // Assuming the epoch time is in seconds, multiply by 1000 to convert to milliseconds
+              var date = new Date(row.tgl_kirim * 1000);
+              var year = date.getFullYear();
+              var month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+              var day = String(date.getDate()).padStart(2, '0');
+              row.tgl_kirim = `${year}/${month}/${day}`;
+          }
+        });
         gridOptions.api.setRowData(jsonData);
       };
       reader.readAsArrayBuffer(file);
