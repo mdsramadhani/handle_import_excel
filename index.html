@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AG Grid Excel Import</title>
+  <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-grid.css">
+  <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css">
+</head>
+<body>
+  <input type="file" id="fileInput" accept=".xlsx, .xls">
+  <div id="myGrid" class="ag-theme-alpine" style="height: 400px; width: 600px;"></div>
+  <button type="button" onclick="klik(this)">Save</button>
+
+  <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.noStyle.js"></script>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    // Dokumen ready
+    var jsonData
+    document.addEventListener('DOMContentLoaded', function () {
+    // defin option grid
+    var gridOptions = {
+      // define header
+      columnDefs: [
+        { headerName: "No", field: "No" },
+        { headerName: "Customer", field: "Customer" },
+        { headerName: "Project", field: "Project" },
+        { headerName: "Tgl Kirim", field: "Tgl Kirim" },
+        { headerName: "Truk", field: "Truk" },
+        { headerName: "Driver", field: "Driver" },
+        { headerName: "No Hp", field: "No Hp" },
+        { headerName: "SO", field: "SO" },
+      ],
+      rowData: []
+    };
+
+    // define ag grid
+    var eGridDiv = document.querySelector('#myGrid');
+    new agGrid.Grid(eGridDiv, gridOptions);
+
+    // event handler on change for import excel
+    document.getElementById('fileInput').addEventListener('change', function (event) {
+      var file = event.target.files[0];
+      var reader = new FileReader();
+
+      reader.onload = function (event) {
+        var data = new Uint8Array(event.target.result);
+        var workbook = XLSX.read(data, { type: 'array' });
+        var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        jsonData = XLSX.utils.sheet_to_json(worksheet);
+        gridOptions.api.setRowData(jsonData);
+      };
+      reader.readAsArrayBuffer(file);
+    });
+});
+
+function klik (e) {
+  if (jsonData.length === 0) {
+    console.log('gagal')
+    return
+  } else {
+    console.log(jsonData)
+  }
+}
+
+  </script>
+</body>
+</html>
