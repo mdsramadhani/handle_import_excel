@@ -6,6 +6,11 @@
   <title>AG Grid Excel Import</title>
   <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-grid.css">
   <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css">
+  <style>
+    body {
+      background: #171f2a !important;
+    }
+  </style>
 </head>
 <body>
   <input type="file" id="fileInput" accept=".xlsx, .xls">
@@ -20,12 +25,12 @@
     document.addEventListener('DOMContentLoaded', function () {
     // defin option grid
     var gridOptions = {
-      // define header
+      // define header, ini wajib tamplate buat excel headernya
       columnDefs: [
         { headerName: "No", field: "No" },
         { headerName: "Customer", field: "Customer" },
         { headerName: "Project", field: "Project" },
-        { headerName: "Tgl Kirim", field: "Tgl Kirim" },
+        { headerName: "Tgl Kirim", field: "Tgl Kirim" }, // ga boleh ada yg spasi kaya gini karna nanti saat lempar ke backend ga kebaca datanya
         { headerName: "Truk", field: "Truk" },
         { headerName: "Driver", field: "Driver" },
         { headerName: "No Hp", field: "No Hp" },
@@ -54,15 +59,16 @@
     });
 });
 
+// ceritanya ini fungsi submit nanti tinggal pake datanya buat dikirim ke backend
 function klik (e) {
   if (jsonData.length === 0) {
     console.log('gagal')
     return
   } else {
+    // ngefetch deh disini kwkwk langsung sekaligus byk 
     console.log(jsonData)
   }
 }
-
   </script>
 </body>
 </html>
